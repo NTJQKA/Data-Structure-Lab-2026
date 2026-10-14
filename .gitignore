@@ -1,0 +1,17 @@
+# Local course reference materials
+/文档/
+
+# Build outputs
+*.exe
+*.o
+*.obj
+*.out
+*.pdb
+*.ilk
+build/
+
+# Local editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
