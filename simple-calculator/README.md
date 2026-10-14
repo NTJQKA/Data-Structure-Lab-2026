@@ -70,18 +70,22 @@
 ## 文件说明
 
 ```text
-Simple Calculator/
+simple-calculator/
 ├── README.md
 ├── Calculator.cpp
-└── CutString.h
+├── Tokenizer.h
+└── experiments/
+    ├── README.md
+    └── calculator_without_tokenizer.cpp
 ```
 
 | 文件 | 当前用途 |
 | --- | --- |
 | `Calculator.cpp` | 主程序，包含优先级表、运算函数 `calculate()`、双栈求值函数 `solve()` 和示例入口 |
-| `CutString.h` | 定义 `Token`、分词函数 `tokenizer()`，以及处理部分负号场景的辅助函数 `tool()` |
+| `Tokenizer.h` | 定义 `Token`、分词函数 `tokenizer()`，以及处理部分负号场景的辅助函数 `tool()` |
+| `experiments/calculator_without_tokenizer.cpp` | 早期手动分词原型，保留用于学习和对比，求值逻辑未完成 |
 
-旧版本可从 Git 提交历史中查看。本地 `garbage/` 中的旧版副本不参与当前构建，也不上传仓库。
+`experiments/` 保存有参考价值的原型代码并纳入版本管理。它不参与主程序构建，已知限制见[实验代码说明](experiments/README.md)。完整的修改历史仍可从 Git 提交记录中查看。
 
 ## 当前进度
 
@@ -106,12 +110,12 @@ Simple Calculator/
 在仓库根目录打开 PowerShell，编译并运行主程序：
 
 ```powershell
-cd "Simple Calculator"
+cd simple-calculator
 g++ -std=c++17 -Wall -Wextra Calculator.cpp -o Calculator.exe
 .\Calculator.exe
 ```
 
-`CutString.h` 由主程序包含，无需单独编译。当前示例表达式写在 `Calculator.cpp` 的 `main()` 中，修改后需要重新编译。
+`Tokenizer.h` 由主程序包含，无需单独编译。当前示例表达式写在 `Calculator.cpp` 的 `main()` 中，修改后需要重新编译。`experiments/` 中的原型有独立的 `main()`，应单独编译，不能与主程序一起链接。
 
 当前示例表达式为：
 

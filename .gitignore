@@ -1,9 +1,6 @@
 # Local course reference materials
 /文档/
 
-# Local copy of an earlier implementation (also available in Git history)
-/Simple Calculator/garbage/
-
 # Build outputs
 *.exe
 *.o
