@@ -1,3 +1,4 @@
+//by Hezhi
 #ifndef SYNTAX_CHECKER_H
 #define SYNTAX_CHECKER_H
 
@@ -14,45 +15,45 @@ inline bool check(const std::string& s) {
     };
 
     const auto fail = [](std::size_t pos, const char* message) -> bool {
-        std::cout << "Óï·¨¼ì²éÎ´Í¨¹ı£¨µÚ " << pos + 1
-                  << " ¸ö×Ö·û£©£º" << message << std::endl;
+        std::cout << "è¯­æ³•æ£€æŸ¥æœªé€šè¿‡ï¼ˆç¬¬ " << pos + 1
+                  << " ä¸ªå­—ç¬¦ï¼‰ï¼š" << message << std::endl;
         return false;
     };
 
-    // ±£´æÉĞÎ´Æ¥ÅäµÄ×óÀ¨ºÅÎ»ÖÃ¡£
+    // ä¿å­˜å°šæœªåŒ¹é…çš„å·¦æ‹¬å·ä½ç½®ã€‚
     std::stack<std::size_t> leftBrackets;
 
-    bool needOperand = true; // µ±Ç°ĞèÒªÊı×Ö»ò×óÀ¨ºÅ¡£
-    bool allowMinus = true;  // ½ö¿ªÍ·»ò×óÀ¨ºÅºóÔÊĞíÒ»Ôª¸ººÅ¡£
+    bool needOperand = true; // å½“å‰éœ€è¦æ•°å­—æˆ–å·¦æ‹¬å·ã€‚
+    bool allowMinus = true;  // ä»…å¼€å¤´æˆ–å·¦æ‹¬å·åå…è®¸ä¸€å…ƒè´Ÿå·ã€‚
     bool hasContent = false;
     std::size_t i = 0;
 
     while (i < s.size()) {
         const char ch = s[i];
 
-        // ÔÊĞí´ÊÔªÖ®¼ä³öÏÖ¿Õ°×£¬µ«²»»á½«Á½¸öÊı×ÖºÏ²¢¡£
+        // å…è®¸è¯å…ƒä¹‹é—´å‡ºç°ç©ºç™½ï¼Œä½†ä¸ä¼šå°†ä¸¤ä¸ªæ•°å­—åˆå¹¶ã€‚
         if (std::isspace(static_cast<unsigned char>(ch))) {
             ++i;
             continue;
         }
 
-        // µÈºÅ±ØĞëÎ»ÓÚÍêÕû±í´ïÊ½Ä©Î²£¬ÇÒÖ»ÄÜ³öÏÖÒ»´Î¡£
+        // ç­‰å·å¿…é¡»ä½äºå®Œæ•´è¡¨è¾¾å¼æœ«å°¾ï¼Œä¸”åªèƒ½å‡ºç°ä¸€æ¬¡ã€‚
         if (ch == '=') {
             if (!hasContent) {
-                return fail(i, "±í´ïÊ½²»ÄÜÎª¿Õ¡£");
+                return fail(i, "è¡¨è¾¾å¼ä¸èƒ½ä¸ºç©ºã€‚");
             }
             if (needOperand) {
-                return fail(i, "µÈºÅÇ°È±ÉÙ²Ù×÷Êı¡£");
+                return fail(i, "ç­‰å·å‰ç¼ºå°‘æ“ä½œæ•°ã€‚");
             }
             if (!leftBrackets.empty()) {
                 return fail(leftBrackets.top(),
-                            "Õâ¸ö×óÀ¨ºÅÃ»ÓĞÆ¥ÅäµÄÓÒÀ¨ºÅ¡£");
+                            "è¿™ä¸ªå·¦æ‹¬å·æ²¡æœ‰åŒ¹é…çš„å³æ‹¬å·ã€‚");
             }
 
             for (std::size_t j = i + 1; j < s.size(); ++j) {
                 if (!std::isspace(static_cast<unsigned char>(s[j]))) {
                     return fail(j,
-                                "µÈºÅÖ»ÄÜ³öÏÖÒ»´Î£¬ÇÒºóÃæÖ»ÄÜÓĞ¿Õ°×¡£");
+                                "ç­‰å·åªèƒ½å‡ºç°ä¸€æ¬¡ï¼Œä¸”åé¢åªèƒ½æœ‰ç©ºç™½ã€‚");
                 }
             }
             return true;
@@ -60,11 +61,11 @@ inline bool check(const std::string& s) {
 
         hasContent = true;
 
-        // ¼ì²éÕûÊı¡¢Ğ¡Êı¡£
+        // æ£€æŸ¥æ•´æ•°ã€å°æ•°ã€‚
         if (isDigit(ch) || ch == '.') {
             if (!needOperand) {
                 return fail(i,
-                            "Á½¸ö²Ù×÷ÊıÖ®¼äÈ±ÉÙÔËËã·û£¬²»ÄÜÓÃ¿Õ¸ñ²ğ¿ªÊı×Ö¡£");
+                            "ä¸¤ä¸ªæ“ä½œæ•°ä¹‹é—´ç¼ºå°‘è¿ç®—ç¬¦ï¼Œä¸èƒ½ç”¨ç©ºæ ¼æ‹†å¼€æ•°å­—ã€‚");
             }
 
             const std::size_t start = i;
@@ -73,19 +74,19 @@ inline bool check(const std::string& s) {
             while (i < s.size() && (isDigit(s[i]) || s[i] == '.')) {
                 if (s[i] == '.') {
                     if (hasDot) {
-                        return fail(i, "Ò»¸öÊı×ÖÖ»ÄÜÓĞÒ»¸öĞ¡Êıµã¡£");
+                        return fail(i, "ä¸€ä¸ªæ•°å­—åªèƒ½æœ‰ä¸€ä¸ªå°æ•°ç‚¹ã€‚");
                     }
                     if (i == start || i + 1 >= s.size()
                         || !isDigit(s[i + 1])) {
                         return fail(i,
-                                    "Ğ¡ÊıµãÇ°ºó±ØĞëÓĞÊı×Ö£¬ÀıÈç 0.5¡£");
+                                    "å°æ•°ç‚¹å‰åå¿…é¡»æœ‰æ•°å­—ï¼Œä¾‹å¦‚ 0.5ã€‚");
                     }
                     hasDot = true;
                 }
                 ++i;
             }
 
-            // ÌáÇ°¼ì²é×ª»»·¶Î§£¬±ÜÃâ tokenizer µÄ stod Å×³öÒì³£¡£
+            // æå‰æ£€æŸ¥è½¬æ¢èŒƒå›´ï¼Œé¿å… tokenizer çš„ stod æŠ›å‡ºå¼‚å¸¸ã€‚
             const std::string number = s.substr(start, i - start);
 
             try {
@@ -93,12 +94,12 @@ inline bool check(const std::string& s) {
                 const double value = std::stod(number, &used);
 
                 if (used != number.size() || !std::isfinite(value)) {
-                    return fail(start, "Êı×Ö¸ñÊ½»òÊıÖµ·¶Î§²»ºÏ·¨¡£");
+                    return fail(start, "æ•°å­—æ ¼å¼æˆ–æ•°å€¼èŒƒå›´ä¸åˆæ³•ã€‚");
                 }
             } catch (const std::invalid_argument&) {
-                return fail(start, "Êı×Ö¸ñÊ½²»ºÏ·¨¡£");
+                return fail(start, "æ•°å­—æ ¼å¼ä¸åˆæ³•ã€‚");
             } catch (const std::out_of_range&) {
-                return fail(start, "Êı×Ö³¬³öÁËµ±Ç°³ÌĞò¿É×ª»»µÄ·¶Î§¡£");
+                return fail(start, "æ•°å­—è¶…å‡ºäº†å½“å‰ç¨‹åºå¯è½¬æ¢çš„èŒƒå›´ã€‚");
             }
 
             needOperand = false;
@@ -106,11 +107,11 @@ inline bool check(const std::string& s) {
             continue;
         }
 
-        // ×óÀ¨ºÅÇ°²»ÄÜ½ô½ÓÊı×Ö»òÓÒÀ¨ºÅ¡£
+        // å·¦æ‹¬å·å‰ä¸èƒ½ç´§æ¥æ•°å­—æˆ–å³æ‹¬å·ã€‚
         if (ch == '(') {
             if (!needOperand) {
                 return fail(i,
-                            "×óÀ¨ºÅÇ°È±ÉÙÔËËã·û£¬ÀıÈçÓ¦Ğ´ 2*(3+4)¡£");
+                            "å·¦æ‹¬å·å‰ç¼ºå°‘è¿ç®—ç¬¦ï¼Œä¾‹å¦‚åº”å†™ 2*(3+4)ã€‚");
             }
 
             leftBrackets.push(i);
@@ -120,14 +121,14 @@ inline bool check(const std::string& s) {
             continue;
         }
 
-        // ¼ì²éÓÒÀ¨ºÅÆ¥Åä£¬ÒÔ¼°À¨ºÅÄÚÊÇ·ñÓĞÍêÕû±í´ïÊ½¡£
+        // æ£€æŸ¥å³æ‹¬å·åŒ¹é…ï¼Œä»¥åŠæ‹¬å·å†…æ˜¯å¦æœ‰å®Œæ•´è¡¨è¾¾å¼ã€‚
         if (ch == ')') {
             if (leftBrackets.empty()) {
-                return fail(i, "Õâ¸öÓÒÀ¨ºÅÃ»ÓĞÆ¥ÅäµÄ×óÀ¨ºÅ¡£");
+                return fail(i, "è¿™ä¸ªå³æ‹¬å·æ²¡æœ‰åŒ¹é…çš„å·¦æ‹¬å·ã€‚");
             }
             if (needOperand) {
                 return fail(i,
-                            "À¨ºÅÄÚÎª¿Õ£¬»òÓÒÀ¨ºÅÇ°È±ÉÙ²Ù×÷Êı¡£");
+                            "æ‹¬å·å†…ä¸ºç©ºï¼Œæˆ–å³æ‹¬å·å‰ç¼ºå°‘æ“ä½œæ•°ã€‚");
             }
 
             leftBrackets.pop();
@@ -137,26 +138,26 @@ inline bool check(const std::string& s) {
             continue;
         }
 
-        // ¼ì²éÔËËã·ûµÄÎ»ÖÃ¡£
+        // æ£€æŸ¥è¿ç®—ç¬¦çš„ä½ç½®ã€‚
         if (ch == '+' || ch == '-' || ch == '*' || ch == '/'
             || ch == '%' || ch == '^' || ch == '&') {
 
             if (needOperand) {
-                // Ò»Ôª¸ººÅÖ»ÔÊĞí³öÏÖÔÚ¿ªÍ·»ò×óÀ¨ºÅºó¡£
+                // ä¸€å…ƒè´Ÿå·åªå…è®¸å‡ºç°åœ¨å¼€å¤´æˆ–å·¦æ‹¬å·åã€‚
                 if (ch == '-' && allowMinus) {
-                    allowMinus = false; // ·ÀÖ¹ --2 µÈÁ¬Ğø¸ººÅ¡£
+                    allowMinus = false; // é˜²æ­¢ --2 ç­‰è¿ç»­è´Ÿå·ã€‚
                     ++i;
                     continue;
                 }
 
-                // µ±Ç°¶ÓÓÑµÄ tool() Ö»´¦ÀíÒ»Ôª¸ººÅ¡£
+                // å½“å‰é˜Ÿå‹çš„ tool() åªå¤„ç†ä¸€å…ƒè´Ÿå·ã€‚
                 if (ch == '+' && allowMinus) {
                     return fail(i,
-                                "µ±Ç°×é°æ±¾²»Ö§³ÖÒ»ÔªÕıºÅ£¬ÇëÈ¥µôÕâ¸ö +¡£");
+                                "å½“å‰ç»„ç‰ˆæœ¬ä¸æ”¯æŒä¸€å…ƒæ­£å·ï¼Œè¯·å»æ‰è¿™ä¸ª +ã€‚");
                 }
 
                 return fail(i,
-                            "ÔËËã·ûÇ°È±ÉÙ²Ù×÷Êı£»ÔËËã·ûºóµÄ¸ºÊıÇë¼ÓÀ¨ºÅ¡£");
+                            "è¿ç®—ç¬¦å‰ç¼ºå°‘æ“ä½œæ•°ï¼›è¿ç®—ç¬¦åçš„è´Ÿæ•°è¯·åŠ æ‹¬å·ã€‚");
             }
 
             needOperand = true;
@@ -166,21 +167,21 @@ inline bool check(const std::string& s) {
         }
 
         return fail(i,
-                    "³öÏÖ·Ç·¨×Ö·û£¬ÇëÊ¹ÓÃÊı×ÖºÍÓ¢ÎÄ°ë½ÇÔËËã·û¡£");
+                    "å‡ºç°éæ³•å­—ç¬¦ï¼Œè¯·ä½¿ç”¨æ•°å­—å’Œè‹±æ–‡åŠè§’è¿ç®—ç¬¦ã€‚");
     }
 
     if (!hasContent) {
-        return fail(0, "±í´ïÊ½²»ÄÜÎª¿Õ¡£");
+        return fail(0, "è¡¨è¾¾å¼ä¸èƒ½ä¸ºç©ºã€‚");
     }
     if (!leftBrackets.empty()) {
         return fail(leftBrackets.top(),
-                    "Õâ¸ö×óÀ¨ºÅÃ»ÓĞÆ¥ÅäµÄÓÒÀ¨ºÅ¡£");
+                    "è¿™ä¸ªå·¦æ‹¬å·æ²¡æœ‰åŒ¹é…çš„å³æ‹¬å·ã€‚");
     }
     if (needOperand) {
-        return fail(s.size(), "±í´ïÊ½Ä©Î²È±ÉÙ²Ù×÷Êı¡£");
+        return fail(s.size(), "è¡¨è¾¾å¼æœ«å°¾ç¼ºå°‘æ“ä½œæ•°ã€‚");
     }
 
-    return fail(s.size(), "±í´ïÊ½±ØĞëÒÔ = ½áÊø¡£");
+    return fail(s.size(), "è¡¨è¾¾å¼å¿…é¡»ä»¥ = ç»“æŸã€‚");
 }
 
 #endif
