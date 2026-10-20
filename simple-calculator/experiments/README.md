@@ -11,4 +11,4 @@
 - 不具备完整的小数、空白字符及非法输入处理，不能作为完整计算器使用。
 - 文件包含独立的 `main()`，如需运行应单独编译，不要与主程序一起链接。
 
-当前主程序见 [`Calculator.cpp`](../Calculator.cpp)，分词实现见 [`Tokenizer.h`](../Tokenizer.h)。
+当前程序入口见 [`main.cpp`](../main.cpp)，求值实现见 [`Calculator.cpp`](../Calculator.cpp)，分词实现见 [`Tokenizer.h`](../Tokenizer.h)。

@@ -1,6 +1,5 @@
 //by Hezhi
-#ifndef SYNTAX_CHECKER_H
-#define SYNTAX_CHECKER_H
+#include "Correction.h"
 
 #include <cctype>
 #include <cmath>
@@ -9,7 +8,7 @@
 #include <stdexcept>
 #include <string>
  
-inline bool check(const std::string& s) {
+bool check(const std::string& s) {
     const auto isDigit = [](char ch) -> bool {
         return ch >= '0' && ch <= '9';
     };
@@ -183,5 +182,3 @@ inline bool check(const std::string& s) {
 
     return fail(s.size(), "表达式必须以 = 结束。");
 }
-
-#endif

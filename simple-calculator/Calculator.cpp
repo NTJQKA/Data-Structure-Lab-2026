@@ -1,4 +1,5 @@
 // by zhuruikang
+#include "Calculator.h"
 #include <cmath>
 #include <stack>
 #include <set>
@@ -103,11 +104,4 @@ void solve() {
     // 这样处理完之后，sta_x会剩一个答案，sta_op剩一个等号。
     // 如果表达式里面不写等于号，会导致差一步算不出正确结果。请语法错误检查者务必认真检查
     cout << sta_x.top() << endl;// 输出计算结果
-}
-int main() {
-    //符合要求的生字符串里可以在字符和数值之间有空格，数量不限，但是不能使用空格把一个完整的数隔开，例如不能把23写成2 3，否则计算结果错误
-    string s = "-2*3^5+23/(45+67)-17%3/8&2=";
-    make_vector(s);
-    print_vec_a();
-    solve();
 }
