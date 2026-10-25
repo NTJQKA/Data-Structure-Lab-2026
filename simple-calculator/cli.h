@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include "Calculator.h"
+#include "Correction.h"
 
 void run_cli() {
     std::cout << "**************************************** 欢迎使用 calculator1.0****************************************" << std::endl;
@@ -19,8 +20,10 @@ void run_cli() {
 
         std::getline(std::cin, expr);
 
-        make_vector(expr);
-        solve();
+        if (check(expr)) {
+            make_vector(expr);
+             solve();
+            }
 
         std::cout << "是否继续<Y/N>?";
         std::cin >> choice;
