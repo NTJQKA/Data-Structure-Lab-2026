@@ -64,14 +64,42 @@ double calculate(double x, char op, double y) {
         else ret = x / y;
     }
     else if (op == '%') {
-        if (fabs(y) < eps) {// y == 0的规避浮点数精度问题写法
+        if (trunc(x) != x || trunc(y) != y) {
+            cout << "求模运算仅支持整数，请检查两侧操作数。" << endl;
+            math_error = true;
+        }
+		//求模两侧必须是整数，且除数不能为0
+        else if (fabs(y) < eps) {// y == 0的规避浮点数精度问题写法
             math_error = true;
         }
         else ret = (int)x % (int)y;
     }
     else if (op == '^') ret = pow(x, y);
-    else if (op == '&') ret = pow(x, 1 / y);
+    /*else if (op == '&') ret = pow(x, 1 / y);*/
     // 这里不用额外错误检测了，经测试，pow函数可以自动处理错误情形（例如-2^2.5），并返回nan，即not a number
+    else if (op == '&') {
+        if (y == 0.0) {
+            cout << "零次方根无定义。" << endl;
+            math_error = true;
+        }
+        else if (x < 0.0) {
+            if (trunc(y) != y) {
+                cout << "负数开方仅支持整数奇次根。" << endl;
+                math_error = true;
+            }
+            else if (fmod(y, 2.0) == 0.0) {
+                cout << "负数不能开偶次方根。" << endl;
+                math_error = true;
+            }
+            else {
+                ret = -pow(-x, 1.0 / y);
+            }
+        }
+        else {
+            ret = pow(x, 1.0 / y);
+        }
+    }
+    
     else {
         cerr << "滚木" << endl;
     }
@@ -92,7 +120,7 @@ void solve() {
                 }
                 double calculated_ans = calculate(top[0], sta_op.top(), top[1]);
                 if (math_error) {
-                    cout << "数学错误：表达式中含有0作为除数或者模数，程序自动结束" << endl;
+                    cout << "数学错误,程序自动结束" << endl;
                     return;
                 }
                 sta_x.push(calculated_ans);
