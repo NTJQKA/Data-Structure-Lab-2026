@@ -15,7 +15,7 @@ void run_cli() {
     std::string expr;
     char choice = 'Y';
 
-    while (choice == 'Y') {
+    while (choice == 'Y' || choice == 'y') {
         std::cout << "请输入表达式<以等号“=”结束>：" << std::endl;
 
         std::getline(std::cin, expr);
