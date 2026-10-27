@@ -4,6 +4,7 @@
 #include <stack>
 #include <set>
 #include <map>
+#include <iomanip>// 加入setprecision
 #include "Tokenizer.h"
 using namespace std;
 const double eps = 1e-9;
@@ -38,6 +39,10 @@ map<char, int> lev_in = {
     {'&', 6}
 };
 void make_vector(string &s) {
+    math_error = false;                       // 清除上一轮错误
+    while (!sta_x.empty()) sta_x.pop();       // 清空操作数栈
+    while (!sta_op.empty()) sta_op.pop();     // 清空运算符栈
+
     a = tokenizer(s);
 	tool(a);
 }
@@ -103,5 +108,6 @@ void solve() {
     }
     // 这样处理完之后，sta_x会剩一个答案，sta_op剩一个等号。
     // 如果表达式里面不写等于号，会导致差一步算不出正确结果。请语法错误检查者务必认真检查
-    cout << sta_x.top() << endl;// 输出计算结果
+    //cout << sta_x.top() << endl;// 输出计算结果
+	cout << setprecision(15) << sta_x.top() << endl;// 输出计算结果，精度15位
 }
