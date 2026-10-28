@@ -7,7 +7,7 @@
 #include <iomanip>// 加入setprecision
 #include "Tokenizer.h"
 using namespace std;
-const double eps = 1e-9;
+const double eps = 1e-15;
 
 bool math_error = false;
 vector<Token> a;
