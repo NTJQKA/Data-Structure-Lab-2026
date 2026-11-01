@@ -103,6 +103,11 @@ double calculate(double x, char op, double y) {
     else {
         cerr << "滚木" << endl;
     }
+	//处理运算结果无定义或超出可表示范围的情况
+    if (!math_error && !std::isfinite(ret)) {
+        cout << "运算结果无定义或超出可表示范围。" << endl;
+        math_error = true;
+    }
     return ret;
 }
 void solve() {
