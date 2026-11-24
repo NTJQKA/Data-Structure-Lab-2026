@@ -1,31 +1,32 @@
 #include <iostream>
-#include <cstring >
+#include <cstring>
+#include <array>
+#include "text_statistics.h"
 using namespace std;
 
 #define NUMBER 300
 
 
 /*
-¹ş·òÂüÊ÷Óë±àÂëÄ£¿éËµÃ÷
+å“ˆå¤«æ›¼æ ‘ä¸ç¼–ç æ¨¡å—è¯´æ˜
 
-ĞèÒªÊäÈë£º
-s[]£º´æ·ÅËùÓĞ²»ÖØ¸´×Ö·ûÊı×é
-w[]£º¶ÔÓ¦×Ö·ûµÄ³öÏÖÆµÂÊÊı×é
-num£º²»ÖØ¸´×Ö·ûµÄ×ÜÊıÁ¿
+éœ€è¦è¾“å…¥ï¼š
+æ¥è‡ªAæ¨¡å— std::array<std::uint64_t,256> frequency
+frequency[i]ï¼šå­—èŠ‚iå¯¹åº”çš„å‡ºç°é¢‘æ¬¡
 
-¶ÔÍâÊä³ö£º
-char_code[256][100] È«¾ÖÊı×é	
-char_code[ch]£º´ú±í×Ö·ûch¶ÔÓ¦µÄ¹ş·òÂü±àÂë×Ö·û´®£¨0¡¢1×é³É£©
+å¯¹å¤–è¾“å‡ºï¼š
+char_code[256][100] å…¨å±€æ•°ç»„
+char_code[ch]ï¼šä»£è¡¨å­—èŠ‚chå¯¹åº”çš„å“ˆå¤«æ›¼ç¼–ç å­—ç¬¦ä¸²ï¼ˆ0ã€1ç»„æˆï¼‰
 
-µ÷ÓÃË³Ğò£º
-1.HuffTree<char>* tree=HuffmanBuild<char>(s,w,num);  ¹¹½¨¹ş·òÂüÊ÷
+è°ƒç”¨é¡ºåºï¼š
+1.HuffTree<char>* tree=HuffmanBuild<char>(stats.frequency);  æ„å»ºå“ˆå¤«æ›¼æ ‘
 2.char temp[100]={0};
-  HuffmanCode<char>(tree->getRoot(),temp,0);    Éú³É±àÂë£¬Ğ´Èëchar_code
-3.ÈÎÎñÍê³Éºóµ÷ÓÃdeleteHuffTree(tree->getRoot());
+  HuffmanCode<char>(tree->getRoot(),temp,0);    ç”Ÿæˆç¼–ç ï¼Œå†™å…¥char_code
+3.ä»»åŠ¡å®Œæˆåè°ƒç”¨deleteHuffTree(tree->getRoot());
 */
 
 
-//¹ş·òÂü½Úµã
+//å“ˆå¤«æ›¼èŠ‚ç‚¹
 template<typename T>
 struct HuffNode
 {
@@ -33,25 +34,25 @@ struct HuffNode
 	int weight;
 	HuffNode<T>* left;
 	HuffNode<T>* right;
-	//¹¹Ôìº¯Êı
-	HuffNode(T v=0,int w=0):val(v),weight(w),left(nullptr),right(nullptr){}
+	//æ„é€ å‡½æ•°
+	HuffNode(T v = 0, int w = 0) :val(v), weight(w), left(nullptr), right(nullptr) {}
 };
 
-//¹ş·òÂüÊ÷
+//å“ˆå¤«æ›¼æ ‘
 template<typename T>
 class HuffTree {
 public:
 	HuffNode<T>* root;
-	//¹¹ÔìÊ÷
+	//æ„é€ æ ‘
 	HuffTree() { root = nullptr; }
 	HuffTree(HuffNode<T>* r) { root = r; }
-	//·µ»Ø¸ù½Úµã
+	//è¿”å›æ ¹èŠ‚ç‚¹
 	HuffNode<T>* getRoot() {
 		return root;
 	}
 };
 
-//×îĞ¡¶Ñ
+//æœ€å°å †
 template<typename T>
 class MinHeap {
 private:
@@ -61,11 +62,11 @@ public:
 	MinHeap() {
 		size = 0;
 	}
-	//²åÈë¶ÑÔªËØ
+	//æ’å…¥å †å…ƒç´ 
 	void insert(HuffTree<T>* t) {
 		heap[++size] = t;
 		int cur = size;
-		//ÏòÉÏµ÷Õû
+		//å‘ä¸Šè°ƒæ•´
 		while (cur > 1) {
 			int parent = cur / 2;
 			if (heap[parent]->getRoot()->weight > heap[cur]->getRoot()->weight) {
@@ -79,12 +80,12 @@ public:
 			}
 		}
 	}
-	//É¾³ı¶Ñ¶¥
+	//åˆ é™¤å †é¡¶
 	HuffTree<T>* removefirst() {
 		if (size == 0)return nullptr;
 		HuffTree<T>* res = heap[1];
 		heap[1] = heap[size--];
-		//ÏòÏÂµ÷Õû
+		//å‘ä¸‹è°ƒæ•´
 		int cur = 1;
 		while (true) {
 			int left = cur * 2;
@@ -110,53 +111,60 @@ public:
 };
 
 
-//¹¹½¨¹ş·òÂüÊ÷
+//æ„å»ºå“ˆå¤«æ›¼æ ‘ã€ç›´æ¥æ¥æ”¶Aæ¨¡å—çš„frequencyæ•°ç»„ï¼Œä¸å†éœ€è¦s,w,numã€‘
 template<typename T>
-HuffTree<T>* HuffmanBuild(char* s, int* w, int num) {
+HuffTree<T>* HuffmanBuild(const std::array<std::uint64_t, 256>& freq) {
 	MinHeap<T>* forest = new MinHeap<T>();
-    //³õÊ¼»¯num¿Ãµ¥½ÚµãÊ÷£¬È«²¿²åÈë×îĞ¡¶Ñ
-	for (int i = 0; i < num; i++) {
-		HuffNode<T>* leaf = new HuffNode<T>(s[i], w[i]);
-		HuffTree<T>* tree = new HuffTree<T>(leaf);
-		forest->insert(tree);
+	//éå†0~255ï¼ŒåªæŠŠé¢‘æ¬¡>0çš„å­—èŠ‚ç”Ÿæˆå¶å­èŠ‚ç‚¹
+	for (int i = 0; i < 256; i++)
+	{
+		if (freq[i] > 0)
+		{
+			T ch = static_cast<T>(i);
+			int weight = static_cast<int>(freq[i]);
+			HuffNode<T>* leaf = new HuffNode<T>(ch, weight);
+			HuffTree<T>* tree = new HuffTree<T>(leaf);
+			forest->insert(tree);
+		}
 	}
 
-	//Ñ­»·ºÏ²¢
+	//å¾ªç¯åˆå¹¶æœ€å°ä¸¤æ£µæ ‘ï¼Œé€»è¾‘å®Œå…¨ä¸å˜
 	while (forest->getSize() > 1) {
-		//È¡³ö×îĞ¡£¬´ÎĞ¡Á½¿ÃÊ÷
 		HuffTree<T>* t1 = forest->removefirst();
 		HuffTree<T>* t2 = forest->removefirst();
-		//ĞÂ½¨¸¸½Úµã£¬È¨ÖµÏà¼Ó
 		HuffNode<T>* newNode = new HuffNode<T>(0, t1->getRoot()->weight + t2->getRoot()->weight);
 		newNode->left = t1->getRoot();
 		newNode->right = t2->getRoot();
 		HuffTree<T>* tempTree = new HuffTree<T>(newNode);
 		forest->insert(tempTree);
 	}
-	//¶ÑÊ£ÏÂ×îºóÒ»¿Ã¹ş·òÂüÊ÷
-	return forest->removefirst();
- }
+	HuffTree<T>* resTree = forest->removefirst();
+	delete forest;
+	return resTree;
+}
 
-//¹ş·òÂü±àÂë
+//å“ˆå¤«æ›¼ç¼–ç ç»“æœå…¨å±€æ•°ç»„ï¼Œäº¤ä»˜ç»™CåŒå­¦ä½¿ç”¨
 char char_code[256][100];
 
 template<typename T>
 void HuffmanCode(HuffNode<T>* ht1, char* Code, int length) {
 	if (ht1 == nullptr)return;
-    //µİ¹é³ö¿Ú£¬Ò¶×Ó½Úµã
+	//é€’å½’å‡ºå£ï¼Œå¶å­èŠ‚ç‚¹
 	if (ht1->left == nullptr && ht1->right == nullptr) {
 		Code[length] = '\0';
-		strcpy_s(char_code[ht1->val],100, Code);
+		//å¼ºè½¬ä¸ºunsigned charï¼Œé˜²æ­¢charè´Ÿæ•°é€ æˆæ•°ç»„ä¸‹æ ‡è¶Šç•Œ
+		strcpy_s(char_code[static_cast<unsigned char>(ht1->val)], 100, Code);
 		return;
 	}
-	//×ó·ÖÖ§Îª0
+	//å·¦åˆ†æ”¯0
 	Code[length] = '0';
 	HuffmanCode(ht1->left, Code, length + 1);
-	//ÓÒ·ÖÖ§Îª1
+	//å³åˆ†æ”¯1
 	Code[length] = '1';
 	HuffmanCode(ht1->right, Code, length + 1);
 }
 
+//é‡Šæ”¾å“ˆå¤«æ›¼æ ‘å†…å­˜
 template<typename T>
 void deleteHuffTree(HuffNode<T>* node) {
 	if (node == nullptr)return;
@@ -166,21 +174,36 @@ void deleteHuffTree(HuffNode<T>* node) {
 }
 
 
-
-//²âÊÔ
+//æµ‹è¯•å…¥å£ï¼Œè”è°ƒAæ¨¡å—
 int main() {
-	char ch[] = { 'a','b','c','d','e' };
-	int weight[] = { 2,3,5,7,8 };
-	int num = 5;
+	//Aæ¨¡å—è¯»å–æ–‡ä»¶ï¼Œè·å–ç»Ÿè®¡ä¿¡æ¯
+	huffman::TextStats stats;
+	string errMsg;
+	bool readOk = huffman::read_and_count("test.txt", stats, errMsg);
+	if (!readOk)
+	{
+		cout << errMsg << endl;
+		return -1;
+	}
 
-	HuffTree<char>* huffTree = HuffmanBuild<char>(ch, weight, num);
+	//Bæ¨¡å—ï¼šç›´æ¥ä½¿ç”¨Açš„frequencyå»ºæ ‘
+	HuffTree<char>* huffTree = HuffmanBuild<char>(stats.frequency);
 
 	char tempBuf[100] = { 0 };
 	HuffmanCode<char>(huffTree->getRoot(), tempBuf, 0);
-	cout << "×Ö·û\t¹ş·òÂü±àÂë" << endl;
-	for (int i = 0; i < num; i++) {
-		cout << ch[i] << "\t" << char_code[ch[i]] << endl;
+
+	//æ‰“å°å­—ç¬¦ã€é¢‘åº¦ã€ç¼–ç 
+	cout << "å­—ç¬¦\té¢‘åº¦\tå“ˆå¤«æ›¼ç¼–ç " << endl;
+	for (int i = 0; i < 256; i++)
+	{
+		if (stats.frequency[i] > 0)
+		{
+			unsigned char ch = static_cast<unsigned char>(i);
+			cout << ch << "\t" << stats.frequency[i] << "\t" << char_code[ch] << endl;
+		}
 	}
+
+	//é‡Šæ”¾å†…å­˜
 	deleteHuffTree(huffTree->getRoot());
 	delete huffTree;
 	return 0;
